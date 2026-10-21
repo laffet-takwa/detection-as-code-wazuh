@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SentinelForge Detection Rule",
+  "type": "object",
+  "required": [
+    "title",
+    "id",
+    "status",
+    "description",
+    "author",
+    "date",
+    "logsource",
+    "detection",
+    "falsepositives",
+    "level"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Human-readable rule title"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "UUID v4 identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "Short machine-readable name (optional)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["stable", "test", "experimental", "deprecated", "unsupported"],
+      "description": "Rule lifecycle status"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 40,
+      "description": "Detailed description of what the rule detects"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Rule author"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "logsource": {
+      "type": "object",
+      "required": ["product"],
+      "properties": {
+        "category": { "type": "string" },
+        "product": { "type": "string" },
+        "service": { "type": "string" },
+        "definition": { "type": "string" }
+      },
+      "description": "Log source classification"
+    },
+    "detection": {
+      "type": "object",
+      "required": ["condition"],
+      "description": "Detection logic with named selections and condition"
+    },
+    "falsepositives": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Known false positive scenarios"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["informational", "low", "medium", "high", "critical"],
+      "description": "Severity level"
+    },
+    "references": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "description": "Reference URLs"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tags including attack.* for MITRE ATT&CK"
+    }
+  },
+  "additionalProperties": true
+}

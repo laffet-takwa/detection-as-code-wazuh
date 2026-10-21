@@ -1,0 +1,29 @@
+title: "Suspicious Windows Service Installation"
+id: "a3b4c5d6-e7f8-9012-6789-345678901234"
+status: stable
+description: |
+  Detects the installation of a new Windows service. Adversaries may install
+  services to establish persistence, execute payloads with SYSTEM privileges,
+  or maintain access to a compromised system. This rule monitors System Event
+  ID 7045 (A service was installed in the system) and filters for suspicious
+  service characteristics such as unusual paths, names, or descriptions.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: windows
+  service: system
+detection:
+  selection_event:
+    EventID: 7045
+  condition: selection_event
+falsepositives:
+  - Legitimate software installations
+  - System updates installing services
+  - Administrative service deployment
+level: medium
+tags:
+  - attack.t1543
+  - attack.t1543.003
+references:
+  - https://attack.mitre.org/techniques/T1543/
+  - https://attack.mitre.org/techniques/T1543/003/

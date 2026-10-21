@@ -1,0 +1,31 @@
+title: "Sudoers Configuration Modification"
+id: "f6a7b8c9-d0e1-2345-f012-678901234567"
+status: stable
+description: |
+  Detects modifications to the sudoers configuration files. Adversaries may
+  modify sudoers to grant elevated privileges to compromised accounts or to
+  enable passwordless sudo for persistence. This rule monitors writes to
+  /etc/sudoers and files in /etc/sudoers.d/.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection_sudoers:
+    type: "file_write"
+    name|contains: "/etc/sudoers"
+  selection_sudoers_d:
+    type: "file_write"
+    name|contains: "/etc/sudoers.d/"
+  condition: selection_sudoers or selection_sudoers_d
+falsepositives:
+  - Legitimate administrative changes to sudo configuration
+  - Package manager updates to sudoers.d
+level: high
+tags:
+  - attack.t1548
+  - attack.t1548.003
+references:
+  - https://attack.mitre.org/techniques/T1548/
+  - https://attack.mitre.org/techniques/T1548/003/

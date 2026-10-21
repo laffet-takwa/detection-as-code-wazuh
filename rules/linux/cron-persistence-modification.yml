@@ -1,0 +1,34 @@
+title: "Cron Persistence Modification"
+id: "d4e5f6a7-b8c9-0123-def0-456789012345"
+status: stable
+description: |
+  Detects modifications to system crontab files and user crontab entries.
+  Adversaries may add malicious cron jobs to establish persistence on Linux systems.
+  This rule monitors for writes to /etc/crontab, /etc/cron.d/*, and crontab command invocations.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: cron
+detection:
+  selection_crontab_write:
+    type: "file_write"
+    name|contains: "/etc/crontab"
+  selection_cron_d_write:
+    type: "file_write"
+    name|contains: "/etc/cron.d/"
+  selection_crontab_cmd:
+    type: "command"
+    comm: "crontab"
+    a0|contains: "-e"
+  condition: selection_crontab_write or selection_cron_d_write or selection_crontab_cmd
+falsepositives:
+  - Legitimate administrative cron job updates
+  - Package manager installing cron jobs
+level: high
+tags:
+  - attack.t1053
+  - attack.t1053.003
+references:
+  - https://attack.mitre.org/techniques/T1053/
+  - https://attack.mitre.org/techniques/T1053/003/

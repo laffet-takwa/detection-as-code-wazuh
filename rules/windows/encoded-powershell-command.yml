@@ -1,0 +1,32 @@
+title: "Encoded PowerShell Command Execution"
+id: "c9d0e1f2-a3b4-5678-2345-901234567890"
+status: stable
+description: |
+  Detects PowerShell execution with base64-encoded commands. The -EncodedCommand
+  parameter allows adversaries to obfuscate malicious commands and bypass simple
+  string-based detection. This rule specifically targets the use of encoded
+  commands in PowerShell script blocks.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: windows
+  service: powershell
+detection:
+  selection_encoded:
+    ScriptBlockText|contains: "-EncodedCommand"
+  selection_encoded_short:
+    ScriptBlockText|contains: "-enc"
+  selection_encoded_case:
+    ScriptBlockText|contains: "-e "
+  condition: selection_encoded or selection_encoded_short or selection_encoded_case
+falsepositives:
+  - Legitimate administrative scripts using encoded commands for complexity
+  - Some deployment tools encode commands
+level: high
+tags:
+  - attack.t1059
+  - attack.t1059.001
+  - attack.t1027
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  - https://attack.mitre.org/techniques/T1027/

@@ -1,0 +1,7 @@
+# SentinelForge - Core dependencies
+# Pinned versions for reproducible builds
+pydantic==2.14.1
+PyYAML==6.0.3
+pysigma==1.5.1
+sigma-cli==3.1.0
+click==8.5.0

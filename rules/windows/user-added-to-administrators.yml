@@ -1,0 +1,29 @@
+title: "User Added to Local Administrators Group"
+id: "e1f2a3b4-c5d6-7890-4567-123456789012"
+status: stable
+description: |
+  Detects when a user is added to the local Administrators group on a Windows
+  system. This is a common privilege escalation technique where adversaries add
+  compromised accounts to the Administrators group to gain elevated privileges.
+  This rule monitors Security Event ID 4732 (A member was added to a security-
+  enabled local group) targeting the Administrators group (SID S-1-5-32-544).
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: windows
+  service: security
+detection:
+  selection_event:
+    EventID: 4732
+    TargetUserName: "Administrators"
+  condition: selection_event
+falsepositives:
+  - Legitimate administrative privilege assignment
+  - Automated system configuration
+level: high
+tags:
+  - attack.t1098
+  - attack.t1078
+references:
+  - https://attack.mitre.org/techniques/T1098/
+  - https://attack.mitre.org/techniques/T1078/

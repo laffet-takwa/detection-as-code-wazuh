@@ -1,0 +1,23 @@
+# SentinelForge example configuration
+# Copy to configuration.local.yaml and adjust for your environment
+
+rules:
+  directory: "rules"
+
+output:
+  wazuh_rules_directory: "wazuh/rules"
+  reports_directory: "reports"
+
+testing:
+  fixtures_directory: "tests/fixtures"
+  strict: false
+
+wazuh:
+  rule_id_base: 100000
+  rule_id_span: 90000
+  logtest_binary: null  # Set to wazuh-logtest path if available
+  rules_directory: null  # Wazuh rules directory for integration tests
+  decoder_groups: []
+
+mapping:
+  overrides: {}

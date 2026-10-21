@@ -1,0 +1,37 @@
+title: "Repeated SSH Authentication Failures from Same Source"
+id: "b2c3d4e5-f6a7-8901-bcde-f23456789012"
+status: stable
+description: |
+  Detects repeated SSH authentication failures originating from the same source IP
+  address within a short time window. This rule identifies potential brute force
+  attacks by counting failed authentication attempts per source IP.
+  Note: Correlation rules require a separate detection engine with time-window
+  aggregation capabilities. This rule is marked as unsupported for automatic
+  conversion to Wazuh because Wazuh custom rules do not natively support
+  multi-event counting with time windows.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    type: "authentication_failure"
+  condition: selection
+falsepositives:
+  - Legitimate users with persistent authentication issues
+  - Misconfigured automated systems
+level: high
+tags:
+  - attack.t1110
+  - attack.t1110.001
+references:
+  - https://attack.mitre.org/techniques/T1110/
+  - https://attack.mitre.org/techniques/T1110/001/
+correlation:
+  type: event_count
+  group_by:
+    - SourceIP
+  timespan: 300
+  condition: gte
+  threshold: 10

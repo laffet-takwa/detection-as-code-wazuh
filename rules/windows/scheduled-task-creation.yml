@@ -1,0 +1,31 @@
+title: "Scheduled Task Creation"
+id: "f2a3b4c5-d6e7-8901-5678-234567890123"
+status: stable
+description: |
+  Detects the creation of a scheduled task on a Windows system. Adversaries
+  may use the Task Scheduler to establish persistence, execute payloads at
+  specific times, or run with elevated privileges. This rule monitors Security
+  Event ID 4698 (A scheduled task was created) and Event ID 4702 (A scheduled
+  task was updated).
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: windows
+  service: security
+detection:
+  selection_created:
+    EventID: 4698
+  selection_updated:
+    EventID: 4702
+  condition: selection_created or selection_updated
+falsepositives:
+  - Legitimate administrative task creation
+  - Software installation creating maintenance tasks
+  - System updates
+level: medium
+tags:
+  - attack.t1053
+  - attack.t1053.005
+references:
+  - https://attack.mitre.org/techniques/T1053/
+  - https://attack.mitre.org/techniques/T1053/005/

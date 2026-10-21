@@ -1,0 +1,40 @@
+title: "Successful SSH Login After Repeated Failures"
+id: "c3d4e5f6-a7b8-9012-cdef-345678901234"
+status: test
+description: |
+  Detects a successful SSH login that follows multiple failed authentication
+  attempts from the same source IP. This pattern is characteristic of a successful
+  brute force attack where the attacker eventually guesses the correct credentials.
+  Note: This correlation rule requires tracking authentication state across
+  multiple events and is not convertible to a single Wazuh custom rule. It is
+  marked as unsupported for automatic conversion.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection_failed:
+    type: "authentication_failure"
+  selection_success:
+    type: "authentication_success"
+  condition: selection_success
+falsepositives:
+  - User finally remembers correct password after several attempts
+  - Legitimate automated retry logic
+level: critical
+tags:
+  - attack.t1110
+  - attack.t1110.001
+  - attack.t1078
+references:
+  - https://attack.mitre.org/techniques/T1110/
+  - https://attack.mitre.org/techniques/T1078/
+correlation:
+  type: event_count
+  rule_name: "SSH Authentication Failure"
+  group_by:
+    - SourceIP
+  timespan: 300
+  condition: gte
+  threshold: 5

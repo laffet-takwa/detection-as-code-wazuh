@@ -1,0 +1,39 @@
+title: "Suspicious PowerShell Execution"
+id: "b8c9d0e1-f2a3-4567-1234-890123456789"
+status: stable
+description: |
+  Detects suspicious PowerShell execution patterns commonly used by adversaries.
+  This includes execution of encoded commands, bypassing execution policies,
+  downloading and executing remote scripts, and use of obfuscation techniques.
+  The rule monitors PowerShell operational logs (Event ID 4104) for script
+  block content.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: windows
+  service: powershell
+detection:
+  selection_encoded:
+    ScriptBlockText|contains: "-EncodedCommand"
+  selection_bypass:
+    ScriptBlockText|contains: "-ExecutionPolicy Bypass"
+  selection_download_cradle:
+    ScriptBlockText|contains:
+      - "DownloadString"
+      - "Invoke-Expression"
+  selection_obfuscation:
+    ScriptBlockText|contains:
+      - "-join"
+      - "[char]"
+  condition: selection_encoded or selection_bypass or selection_download_cradle or selection_obfuscation
+falsepositives:
+  - Legitimate administrative scripts using encoded commands
+  - Deployment automation using download cradles
+  - Penetration testing activities
+level: high
+tags:
+  - attack.t1059
+  - attack.t1059.001
+references:
+  - https://attack.mitre.org/techniques/T1059/
+  - https://attack.mitre.org/techniques/T1059/001/

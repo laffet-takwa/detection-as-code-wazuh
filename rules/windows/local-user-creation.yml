@@ -1,0 +1,27 @@
+title: "Local User Account Creation"
+id: "d0e1f2a3-b4c5-6789-3456-012345678901"
+status: stable
+description: |
+  Detects the creation of a local user account on a Windows system. Adversaries
+  may create accounts to maintain persistence, escalate privileges, or provide
+  alternative access to a compromised system. This rule monitors Security Event
+  ID 4720 (A user account was created).
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: windows
+  service: security
+detection:
+  selection_event:
+    EventID: 4720
+  condition: selection_event
+falsepositives:
+  - Legitimate administrative account creation
+  - Automated provisioning systems
+level: medium
+tags:
+  - attack.t1136
+  - attack.t1136.001
+references:
+  - https://attack.mitre.org/techniques/T1136/
+  - https://attack.mitre.org/techniques/T1136/001/

@@ -1,0 +1,31 @@
+title: "SSH Authorized Keys Modification"
+id: "e5f6a7b8-c9d0-1234-ef01-567890123456"
+status: stable
+description: |
+  Detects modifications to SSH authorized_keys files. Adversaries may add their
+  own public keys to authorized_keys to maintain persistent access to a system
+  via SSH. This rule monitors for writes to authorized_keys files in user home
+  directories and root.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection_authorized_keys:
+    type: "file_write"
+    name|endswith: ".ssh/authorized_keys"
+  selection_authorized_keys2:
+    type: "file_write"
+    name|endswith: ".ssh/authorized_keys2"
+  condition: selection_authorized_keys or selection_authorized_keys2
+falsepositives:
+  - Legitimate users adding their own keys
+  - Configuration management tools updating keys
+level: high
+tags:
+  - attack.t1098
+  - attack.t1098.004
+references:
+  - https://attack.mitre.org/techniques/T1098/
+  - https://attack.mitre.org/techniques/T1098/004/

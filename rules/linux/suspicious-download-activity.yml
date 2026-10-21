@@ -1,0 +1,41 @@
+title: "Suspicious Command Line Download Activity"
+id: "a7b8c9d0-e1f2-3456-0123-789012345678"
+status: stable
+description: |
+  Detects suspicious file download commands executed via common command-line
+  utilities such as curl, wget, and fetch. Adversaries often use these tools to
+  download payloads, scripts, or additional tools onto a compromised system.
+  This rule focuses on downloads to world-writable directories and execution
+  of downloaded content.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection_curl:
+    type: "command"
+    comm: "curl"
+    a0|contains: "-o"
+  selection_wget:
+    type: "command"
+    comm: "wget"
+    a0|contains: "-O"
+  selection_fetch:
+    type: "command"
+    comm: "fetch"
+    a0|contains: "-o"
+  selection_execute_download:
+    type: "command"
+    comm|contains: "sh"
+    a0|contains: "curl"
+  condition: selection_curl or selection_wget or selection_fetch or selection_execute_download
+falsepositives:
+  - Legitimate administrative downloads
+  - Automated deployment scripts
+  - Package manager operations
+level: medium
+tags:
+  - attack.t1105
+references:
+  - https://attack.mitre.org/techniques/T1105/

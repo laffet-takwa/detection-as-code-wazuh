@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Test and coverage artifacts
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+nox/
+
+# Type checking
+.mypy_cache/
+.pyre/
+
+# Linting
+.ruff_cache/
+
+# Editor and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# SentinelForge specific
+wazuh/rules/
+reports/
+*.log
+*.tmp
+
+# Local configuration (never commit secrets)
+*.env
+*.env.local
+configuration.local.yaml
+
+# Generated rule files (committed only when intentionally released)
+# wazuh/rules/*.xml
+
+# Temporary files
+tmp/
+temp/

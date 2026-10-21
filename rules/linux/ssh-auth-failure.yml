@@ -1,0 +1,27 @@
+title: "SSH Authentication Failure"
+id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+status: stable
+description: |
+  Detects failed SSH authentication attempts. This rule triggers on each failed
+  login attempt recorded by the OpenSSH daemon, including invalid users, wrong
+  passwords, and protocol mismatches. A high volume of these events from a single
+  source may indicate a brute force attack.
+author: "SentinelForge"
+date: "2024-01-15"
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    type: "authentication_failure"
+  condition: selection
+falsepositives:
+  - Legitimate users mistyping passwords
+  - Automated scripts with outdated credentials
+level: medium
+tags:
+  - attack.t1110
+  - attack.t1110.001
+references:
+  - https://attack.mitre.org/techniques/T1110/
+  - https://www.openssh.com/manual.html
