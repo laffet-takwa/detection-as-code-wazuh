@@ -78,12 +78,11 @@ def load_fixtures(fixtures_dir: Path) -> list[FixtureCase]:
         rule_id = ""
         rule_file_stem = rule_dir
         if "-" in rule_dir:
-            # Try to extract UUID suffix (8 hex chars after last dash)
-            parts = rule_dir.rsplit("-", 1)
-            if len(parts[1]) == 8 and all(c in "0123456789abcdef" for c in parts[1]):
-                rule_title = parts[0]
-                rule_id = parts[1]
-                rule_file_stem = parts[0]
+            split_parts: list[str] = rule_dir.rsplit("-", 1)
+            if len(split_parts[1]) == 8 and all(c in "0123456789abcdef" for c in split_parts[1]):
+                rule_title = split_parts[0]
+                rule_id = split_parts[1]
+                rule_file_stem = split_parts[0]
 
         cases.append(
             FixtureCase(
@@ -105,8 +104,8 @@ class FixtureMatcher:
         self._logsource = logsource
         self._field_patterns = self._compile_field_patterns(logsource)
 
-    def _compile_field_patterns(self, logsource: LogSource) -> dict[str, list[re.Pattern]]:
-        patterns: dict[str, list[re.Pattern]] = {}
+    def _compile_field_patterns(self, logsource: LogSource) -> dict[str, list[re.Pattern[str]]]:
+        patterns: dict[str, list[re.Pattern[str]]] = {}
         # Use a simple fallback: match field=value or "field=value"
         # In practice the conversion layer uses the mapping registry
         return patterns

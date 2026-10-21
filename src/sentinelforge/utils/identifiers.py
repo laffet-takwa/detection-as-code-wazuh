@@ -18,9 +18,7 @@ __all__ = [
 ]
 
 #: Canonical textual representation of a UUID used by the Sigma specification.
-UUID_PATTERN = re.compile(
-    r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-)
+UUID_PATTERN = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 
 _SLUG_STRIP = re.compile(r"[^a-z0-9]+")
 

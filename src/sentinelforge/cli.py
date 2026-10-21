@@ -23,13 +23,14 @@ from .models import LogSource
 from .reporting import write_all_reports
 from .testing import load_fixtures, run_fixture_tests, run_wazuh_integration_tests
 from .validation import RepositoryValidator
+from .validation.repository import ValidationResult
 
 __all__ = ["main"]
 
 logger = get_logger(__name__)
 
 
-def _load_rules(settings: Settings):
+def _load_rules(settings: Settings) -> ValidationResult:
     """Load and validate all rules, returning the validation result."""
     validator = RepositoryValidator(settings)
     return validator.validate()
@@ -217,7 +218,11 @@ def test(ctx: click.Context, fixtures_dir: Path | None, wazuh: bool) -> None:
 
     settings: Settings = ctx.obj["settings"]
     if fixtures_dir:
-        settings.fixtures_directory = fixtures_dir
+        settings = Settings.build(
+            settings.project_root,
+            config_file=settings.config_file,
+            overrides={"fixtures_directory": fixtures_dir, "strict": settings.strict},
+        )
 
     logger.info("Starting tests", extra={"fixtures_dir": str(settings.fixtures_directory)})
 
@@ -264,17 +269,13 @@ def test(ctx: click.Context, fixtures_dir: Path | None, wazuh: bool) -> None:
                 }
                 for f in fixtures
             ]
-            wazuh_status, wazuh_detail = run_wazuh_integration_tests(
-                settings, generated_rules, fixture_dicts
-            )
+            wazuh_status, wazuh_detail = run_wazuh_integration_tests(settings, generated_rules, fixture_dicts)
         else:
             wazuh_detail = "No generated rules found. Run 'convert' first."
 
     # Re-run fixture tests with wazuh integration status
     test_report = run_fixture_tests(
-        rules, fixtures, compiled_irs, log_sources,
-        wazuh_integration=wazuh_status,
-        wazuh_detail=wazuh_detail
+        rules, fixtures, compiled_irs, log_sources, wazuh_integration=wazuh_status, wazuh_detail=wazuh_detail
     )
 
     # Report

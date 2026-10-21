@@ -91,17 +91,13 @@ def main() -> int:
             }
             for f in fixtures
         ]
-        wazuh_status, wazuh_detail = run_wazuh_integration_tests(
-            settings, generated_rules, fixture_dicts
-        )
+        wazuh_status, wazuh_detail = run_wazuh_integration_tests(settings, generated_rules, fixture_dicts)
     else:
         wazuh_status, wazuh_detail = "NOT RUN", "No generated rules found. Run 'convert' first."
 
     # Re-run fixture tests with wazuh integration status
     test_report = run_fixture_tests(
-        rules, fixtures, compiled_irs, log_sources,
-        wazuh_integration=wazuh_status,
-        wazuh_detail=wazuh_detail
+        rules, fixtures, compiled_irs, log_sources, wazuh_integration=wazuh_status, wazuh_detail=wazuh_detail
     )
 
     # Coverage

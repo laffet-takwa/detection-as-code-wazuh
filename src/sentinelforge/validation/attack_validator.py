@@ -250,8 +250,7 @@ def validate_attack_tags(
                     severity=IssueSeverity.ERROR,
                     code="attack.missing",
                     message=(
-                        "Rule does not reference a MITRE ATT&CK technique. Add at least one "
-                        "'attack.tXXXX' tag."
+                        "Rule does not reference a MITRE ATT&CK technique. Add at least one " "'attack.tXXXX' tag."
                     ),
                     rule_path=rule_path,
                     rule_id=rule_id,
@@ -268,8 +267,7 @@ def validate_attack_tags(
                     severity=IssueSeverity.ERROR,
                     code="attack.invalid_id",
                     message=(
-                        f"'{technique_id}' is not a valid ATT&CK technique identifier "
-                        "(expected T#### or T####.###)."
+                        f"'{technique_id}' is not a valid ATT&CK technique identifier " "(expected T#### or T####.###)."
                     ),
                     rule_path=rule_path,
                     rule_id=rule_id,
@@ -295,9 +293,7 @@ def validate_attack_tags(
                     stage="attack",
                 )
             )
-            references.append(
-                AttackReference(id=technique_id, url=technique_url(technique_id))
-            )
+            references.append(AttackReference(id=technique_id, url=technique_url(technique_id)))
             continue
         references.append(
             AttackReference(

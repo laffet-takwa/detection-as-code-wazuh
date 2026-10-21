@@ -126,7 +126,7 @@ class TestValidationReport:
             rules_discovered=1,
             rules_valid=0,
             rules_invalid=1,
-            issues=[Issue(severity=IssueSeverity.ERROR, code="test", message="Error", rule_path="test.yml")]
+            issues=[Issue(severity=IssueSeverity.ERROR, code="test", message="Error", rule_path="test.yml")],
         )
         assert not report.passed
 

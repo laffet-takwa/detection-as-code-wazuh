@@ -37,6 +37,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-dev.txt
+          pip install -e .
 
       - name: Run Ruff linting
         run: |
@@ -52,19 +53,19 @@ jobs:
 
       - name: Validate Sigma rules
         run: |
-          python scripts/validate_rules.py
+          sentinelforge validate
 
       - name: Convert rules to Wazuh
         run: |
-          python scripts/convert_rules.py
+          sentinelforge convert --backend wazuh
 
       - name: Run fixture tests
         run: |
-          python scripts/run_tests.py
+          sentinelforge test --fixtures tests/fixtures
 
       - name: Generate reports
         run: |
-          python scripts/generate_report.py
+          sentinelforge report
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
@@ -76,6 +77,7 @@ jobs:
 
       - name: Upload generated rules
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: sentinelforge-wazuh-rules
           path: wazuh/rules/
@@ -104,7 +106,7 @@ jobs:
   integration-test:
     name: Wazuh Integration Test (Manual)
     runs-on: ubuntu-latest
-    if: false  # Only run manually via workflow_dispatch
+    if: false
     timeout-minutes: 60
     steps:
       - name: Checkout repository
@@ -119,6 +121,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-dev.txt
+          pip install -e .
 
       - name: Install Wazuh Manager (for integration testing)
         run: |
@@ -133,21 +136,22 @@ jobs:
 
       - name: Run validation and conversion
         run: |
-          python scripts/validate_rules.py
-          python scripts/convert_rules.py
+          sentinelforge validate
+          sentinelforge convert --backend wazuh
 
       - name: Run integration tests
         env:
           SENTINELFORGE_WAZUH_LOGTEST: /var/ossec/bin/wazuh-logtest
         run: |
-          python scripts/run_tests.py --wazuh
+          sentinelforge test --fixtures tests/fixtures --wazuh
 
       - name: Generate integration reports
         run: |
-          python scripts/generate_report.py
+          sentinelforge report
 
       - name: Upload integration reports
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: sentinelforge-integration-reports
           path: reports/

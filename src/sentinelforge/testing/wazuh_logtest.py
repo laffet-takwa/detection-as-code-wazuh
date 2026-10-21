@@ -82,7 +82,7 @@ class WazuhLogtestRunner:
             log_path = tf.name
 
         try:
-            cmd = [self._binary, "-c", str(rule_file), log_path]
+            cmd = [str(self._binary), "-c", str(rule_file), log_path]
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
             raw = result.stdout + result.stderr
             matched_rules = self._parse_matched_rules(raw)
@@ -145,7 +145,7 @@ def run_wazuh_integration_tests(
     results: list[LogtestResult] = []
     for rule_file in generated_rules:
         for fixture in fixtures:
-            if fixture.get("rule_file") == str(rule_file) or fixture.get("rule_id") in str(rule_file):
+            if fixture.get("rule_file") == str(rule_file) or fixture.get("rule_id", "") in str(rule_file):
                 result = runner.test_log(rule_file, fixture["log_text"])
                 results.append(result)
 

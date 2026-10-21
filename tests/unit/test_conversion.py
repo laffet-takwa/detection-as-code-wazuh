@@ -1,6 +1,5 @@
 """Unit tests for conversion module."""
 
-
 import pytest
 from sentinelforge.conversion import (
     WazuhRuleBuilder,

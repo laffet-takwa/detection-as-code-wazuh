@@ -12,11 +12,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from sigma.collection import SigmaCorrelationRule
 from sigma.exceptions import SigmaConditionError, SigmaError
 from sigma.rule import SigmaRule
-from sigma.validation import SigmaValidationIssue, SigmaValidator
-from sigma.validators.base import SigmaValidationIssueSeverity
+from sigma.validation import SigmaValidationIssue, SigmaValidator  # type: ignore[attr-defined]
+from sigma.validators.base import SigmaValidationIssueSeverity  # noqa: TID251
 from sigma.validators.core.condition import (
     AllOfThemConditionValidator,
     DanglingConditionValidator,
@@ -91,7 +90,7 @@ class ParsedRule:
 
     path: str
     document: dict[str, Any]
-    rule: SigmaRule | SigmaCorrelationRule | None = None
+    rule: SigmaRule | None = None
     kind: RuleKind = RuleKind.DETECTION
     issues: list[Issue] = field(default_factory=list)
 
@@ -216,9 +215,7 @@ def run_best_practice_validators(
 
     issues: list[Issue] = []
     detection_rules = [
-        parsed.rule
-        for parsed in rules
-        if parsed.rule is not None and parsed.ok and parsed.kind is RuleKind.DETECTION
+        parsed.rule for parsed in rules if parsed.rule is not None and parsed.ok and parsed.kind is RuleKind.DETECTION
     ]
     if not detection_rules:
         return issues
@@ -236,9 +233,7 @@ def run_best_practice_validators(
 def _convert_issue(validation_issue: SigmaValidationIssue) -> Issue:
     """Convert a pySigma validation issue into a SentinelForge issue."""
 
-    rule_paths = [
-        str(rule.source) if rule.source is not None else str(rule.id) for rule in validation_issue.rules
-    ]
+    rule_paths = [str(rule.source) if rule.source is not None else str(rule.id) for rule in validation_issue.rules]
     path = rule_paths[0] if rule_paths else None
     return Issue(
         severity=map_validation_severity(validation_issue.severity),

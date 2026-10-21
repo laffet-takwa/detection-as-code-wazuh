@@ -28,7 +28,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+from typing import Any, cast
 
 from sigma.conditions import (
     ConditionAND,
@@ -38,7 +38,7 @@ from sigma.conditions import (
     ConditionSelector,
     SigmaCondition,
 )
-from sigma.modifiers import (
+from sigma.modifiers import (  # type: ignore[attr-defined]
     SigmaAllModifier,
     SigmaCaseSensitiveModifier,
     SigmaCompareModifier,
@@ -197,9 +197,7 @@ class ConditionCompiler:
                     rule_path=rule_path,
                     rule_id=rule_id,
                     feature="condition.unparsable",
-                    limitation=(
-                        "Only boolean conditions over detection identifiers are supported."
-                    ),
+                    limitation=("Only boolean conditions over detection identifiers are supported."),
                 ) from exc
             if tree is None:
                 raise UnsupportedFeatureError(
@@ -209,9 +207,7 @@ class ConditionCompiler:
                     feature="condition.empty",
                     limitation="Only boolean conditions over detection identifiers are supported.",
                 )
-            branches.append(
-                self._node_from_condition(tree, detections, logsource, rule_path, rule_id)
-            )
+            branches.append(self._node_from_condition(tree, detections, logsource, rule_path, rule_id))
 
         if len(branches) == 1:
             return branches[0]
@@ -251,9 +247,7 @@ class ConditionCompiler:
                     limitation="Selectors must match at least one detection definition.",
                 )
             children = tuple(
-                self._node_from_detection(
-                    detections[identifier.identifier], logsource, rule_path, rule_id
-                )
+                self._node_from_detection(detections[identifier.identifier], logsource, rule_path, rule_id)
                 for identifier in identifiers
             )
             operator = "or" if item.cond_class is ConditionOR else "and"
@@ -261,8 +255,7 @@ class ConditionCompiler:
 
         if isinstance(item, ConditionAND):
             children = tuple(
-                self._node_from_condition(child, detections, logsource, rule_path, rule_id)
-                for child in item.args
+                self._node_from_condition(child, detections, logsource, rule_path, rule_id) for child in item.args
             )
             if not children:
                 raise UnsupportedFeatureError(
@@ -278,8 +271,7 @@ class ConditionCompiler:
 
         if isinstance(item, ConditionOR):
             children = tuple(
-                self._node_from_condition(child, detections, logsource, rule_path, rule_id)
-                for child in item.args
+                self._node_from_condition(child, detections, logsource, rule_path, rule_id) for child in item.args
             )
             if not children:
                 raise UnsupportedFeatureError(
@@ -294,9 +286,7 @@ class ConditionCompiler:
             return BoolNode("or", children)
 
         if isinstance(item, ConditionNOT):
-            child = self._node_from_condition(
-                item.args[0], detections, logsource, rule_path, rule_id
-            )
+            child = self._node_from_condition(item.args[0], detections, logsource, rule_path, rule_id)
             return NotNode(child)
 
         raise UnsupportedFeatureError(
@@ -328,7 +318,7 @@ class ConditionCompiler:
             linking = detection.item_linking
             operator = "and" if linking is ConditionAND else "or"
             children = tuple(
-                self._node_from_item(item, logsource, rule_path, rule_id) for item in items
+                self._node_from_item(cast(SigmaDetectionItem, item), logsource, rule_path, rule_id) for item in items
             )
             if len(children) == 1:
                 return children[0]
@@ -396,9 +386,7 @@ class ConditionCompiler:
         operator = "and" if linking is ConditionAND else "or"
         return BoolNode(operator, tuple(clauses))
 
-    def _check_modifiers(
-        self, item: SigmaDetectionItem, rule_path: str | None, rule_id: str | None
-    ) -> None:
+    def _check_modifiers(self, item: SigmaDetectionItem, rule_path: str | None, rule_id: str | None) -> None:
         for modifier in item.modifiers:
             name = modifier.__name__
             if name in {
@@ -447,9 +435,7 @@ class ConditionCompiler:
                 ),
             )
 
-    def _clause_kind(
-        self, item: SigmaDetectionItem, rule_path: str | None, rule_id: str | None
-    ) -> ClauseKind:
+    def _clause_kind(self, item: SigmaDetectionItem, rule_path: str | None, rule_id: str | None) -> ClauseKind:
         if SigmaExistsModifier in item.modifiers:
             return ClauseKind.EXISTS
         if SigmaContainsModifier in item.modifiers:
@@ -468,7 +454,7 @@ class ConditionCompiler:
         rule_id: str | None,
     ) -> str:
         if isinstance(value, SigmaExists):
-            return "true" if value.boolean else "false"
+            return "true" if value.boolean else "false"  # type: ignore[attr-defined]
         if isinstance(value, SigmaCasedString):
             text = str(value)
         elif isinstance(value, SigmaString):
@@ -495,8 +481,7 @@ class ConditionCompiler:
                 rule_id=rule_id,
                 feature=f"value.{type(value).__name__}",
                 limitation=(
-                    "Only plain string, integer and boolean values are part of the supported "
-                    "conversion subset."
+                    "Only plain string, integer and boolean values are part of the supported " "conversion subset."
                 ),
             )
 

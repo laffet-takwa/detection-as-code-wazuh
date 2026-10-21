@@ -35,7 +35,7 @@ def configure_logging(level: str = "INFO", *, stream: object | None = None) -> l
         logger.removeHandler(handler)
         handler.close()
 
-    handler = logging.StreamHandler(stream if stream is not None else sys.stderr)
+    handler = logging.StreamHandler(sys.stderr if stream is None else stream)  # type: ignore[call-overload]
     handler.setFormatter(logging.Formatter(_CONSOLE_FORMAT, datefmt=_DATE_FORMAT))
     handler.setLevel(numeric_level)
     logger.addHandler(handler)

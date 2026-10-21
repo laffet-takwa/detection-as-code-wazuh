@@ -147,8 +147,9 @@ def validate_metadata(
     if title is not None:
         if not isinstance(title, str) or not title.strip():
             issues.append(
-                _issue("metadata.invalid_title", "Field 'title' must be a non-empty string.",
-                       path=path, field_name="title")
+                _issue(
+                    "metadata.invalid_title", "Field 'title' must be a non-empty string.", path=path, field_name="title"
+                )
             )
         elif len(title.strip()) < _MIN_TITLE_LENGTH:
             issues.append(
@@ -168,8 +169,7 @@ def validate_metadata(
             issues.append(
                 _issue(
                     "metadata.invalid_uuid",
-                    "Field 'id' must be a canonical UUID "
-                    "(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).",
+                    "Field 'id' must be a canonical UUID " "(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).",
                     path=path,
                     field_name="id",
                 )
@@ -185,8 +185,7 @@ def validate_metadata(
             issues.append(
                 _issue(
                     "metadata.invalid_status",
-                    f"Field 'status' must be one of "
-                    f"{', '.join(item.value for item in RuleStatus)}.",
+                    f"Field 'status' must be one of " f"{', '.join(item.value for item in RuleStatus)}.",
                     path=path,
                     field_name="status",
                 )
@@ -196,8 +195,12 @@ def validate_metadata(
     if description is not None:
         if not isinstance(description, str):
             issues.append(
-                _issue("metadata.invalid_description", "Field 'description' must be a string.",
-                       path=path, field_name="description")
+                _issue(
+                    "metadata.invalid_description",
+                    "Field 'description' must be a string.",
+                    path=path,
+                    field_name="description",
+                )
             )
         elif _is_placeholder(description):
             issues.append(
@@ -253,8 +256,12 @@ def validate_metadata(
                 )
         else:
             issues.append(
-                _issue("metadata.invalid_date", "Field 'date' must be a string or date value.",
-                       path=path, field_name="date")
+                _issue(
+                    "metadata.invalid_date",
+                    "Field 'date' must be a string or date value.",
+                    path=path,
+                    field_name="date",
+                )
             )
 
     level = document.get("level")
@@ -266,16 +273,14 @@ def validate_metadata(
                 issues.append(
                     _issue(
                         "metadata.invalid_level",
-                        f"Field 'level' must be one of "
-                        f"{', '.join(item.value for item in Severity)}.",
+                        f"Field 'level' must be one of " f"{', '.join(item.value for item in Severity)}.",
                         path=path,
                         field_name="level",
                     )
                 )
         else:
             issues.append(
-                _issue("metadata.invalid_level", "Field 'level' must be a string.",
-                       path=path, field_name="level")
+                _issue("metadata.invalid_level", "Field 'level' must be a string.", path=path, field_name="level")
             )
 
     falsepositives = document.get("falsepositives")
@@ -306,8 +311,12 @@ def validate_metadata(
     if references is not None:
         if not isinstance(references, list):
             issues.append(
-                _issue("metadata.invalid_references", "Field 'references' must be a list.",
-                       path=path, field_name="references")
+                _issue(
+                    "metadata.invalid_references",
+                    "Field 'references' must be a list.",
+                    path=path,
+                    field_name="references",
+                )
             )
         else:
             for reference in references:
@@ -326,8 +335,7 @@ def validate_metadata(
     if tags is not None:
         if not isinstance(tags, list) or not all(isinstance(item, str) for item in tags):
             issues.append(
-                _issue("metadata.invalid_tags", "Field 'tags' must be a list of strings.",
-                       path=path, field_name="tags")
+                _issue("metadata.invalid_tags", "Field 'tags' must be a list of strings.", path=path, field_name="tags")
             )
         else:
             metadata.tags = [item.strip() for item in tags]
@@ -338,8 +346,7 @@ def validate_metadata(
             issues.append(
                 _issue(
                     "metadata.invalid_logsource",
-                    "Field 'logsource' must be a mapping with 'category', 'product' and/or "
-                    "'service' keys.",
+                    "Field 'logsource' must be a mapping with 'category', 'product' and/or " "'service' keys.",
                     path=path,
                     field_name="logsource",
                 )
@@ -351,14 +358,11 @@ def validate_metadata(
                 service=logsource.get("service"),
                 definition=logsource.get("definition"),
             )
-            if not any(
-                logsource.get(key) for key in ("category", "product", "service")
-            ):
+            if not any(logsource.get(key) for key in ("category", "product", "service")):
                 issues.append(
                     _issue(
                         "metadata.incomplete_logsource",
-                        "Field 'logsource' must define at least one of 'category', 'product' "
-                        "or 'service'.",
+                        "Field 'logsource' must define at least one of 'category', 'product' " "or 'service'.",
                         path=path,
                         field_name="logsource",
                     )
@@ -436,8 +440,9 @@ def validate_metadata(
     if name is not None:
         if not isinstance(name, str) or not name.strip():
             issues.append(
-                _issue("metadata.invalid_name", "Field 'name' must be a non-empty string.",
-                       path=path, field_name="name")
+                _issue(
+                    "metadata.invalid_name", "Field 'name' must be a non-empty string.", path=path, field_name="name"
+                )
             )
         else:
             metadata.name = name.strip()

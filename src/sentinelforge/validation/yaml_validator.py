@@ -27,9 +27,7 @@ class _UniqueKeyLoader(yaml.SafeLoader):
     """SafeLoader variant that rejects duplicated mapping keys."""
 
 
-def _construct_unique_mapping(
-    loader: _UniqueKeyLoader, node: yaml.MappingNode, deep: bool = False
-) -> dict[Any, Any]:
+def _construct_unique_mapping(loader: _UniqueKeyLoader, node: yaml.MappingNode, deep: bool = False) -> dict[Any, Any]:
     loader.flatten_mapping(node)
     mapping: dict[Any, Any] = {}
     for key_node, value_node in node.value:
@@ -45,9 +43,7 @@ def _construct_unique_mapping(
     return mapping
 
 
-_UniqueKeyLoader.add_constructor(
-    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _construct_unique_mapping
-)
+_UniqueKeyLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _construct_unique_mapping)
 
 
 @dataclass
@@ -139,10 +135,7 @@ def validate_yaml_text(text: str, path: str = "<memory>") -> YamlValidationResul
             Issue(
                 severity=IssueSeverity.ERROR,
                 code="yaml.invalid_structure",
-                message=(
-                    "Top level YAML structure must be a mapping, got "
-                    f"{type(document).__name__}."
-                ),
+                message=("Top level YAML structure must be a mapping, got " f"{type(document).__name__}."),
                 rule_path=path,
                 stage="yaml",
             )

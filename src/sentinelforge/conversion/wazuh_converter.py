@@ -329,8 +329,8 @@ class WazuhConverter(Converter):
                 limitation="Field-based matches require a Sigma field with a Wazuh mapping.",
             )
 
-        pattern = self._build_field_pattern(clause, logsource, mapping)
-        if pattern is None:
+        field_pattern = self._build_field_pattern(clause, logsource, mapping)
+        if field_pattern is None:
             raise UnsupportedFeatureError(
                 UNKNOWN_FIELD_MESSAGE.format(field=field_name, logsource=logsource.key),
                 rule_path=None,
@@ -341,9 +341,9 @@ class WazuhConverter(Converter):
             )
 
         if clause.kind in (ClauseKind.EQUALS, ClauseKind.CONTAINS, ClauseKind.STARTSWITH, ClauseKind.ENDSWITH):
-            builder.match_fields.append((field_name, pattern))
+            builder.match_fields.append((field_name, field_pattern))
         else:
-            builder.regex_fields.append((field_name, pattern))
+            builder.regex_fields.append((field_name, field_pattern))
 
     def _compile_bool_node(
         self,
@@ -405,6 +405,8 @@ class WazuhConverter(Converter):
         logsource: LogSource,
         mapping: LogSourceMapping,
     ) -> str | None:
+        if clause.field is None:
+            return None
         pattern = self._mapping.pattern(logsource, clause.field)
         if pattern is None:
             return None

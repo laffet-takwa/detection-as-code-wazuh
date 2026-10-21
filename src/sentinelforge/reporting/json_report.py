@@ -15,7 +15,8 @@ __all__ = ["write_json_report", "write_all_reports"]
 
 def _serialize_model(model: Any) -> dict[str, Any]:
     if hasattr(model, "model_dump"):
-        return model.model_dump(mode="json")
+        result: dict[str, Any] = model.model_dump(mode="json")
+        return result
     return {}
 
 

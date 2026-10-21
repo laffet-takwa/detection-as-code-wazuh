@@ -130,9 +130,7 @@ class RepositoryValidator:
             return ParsedRule(path=display, document={}), RuleMetadata()
 
         platform_directory = self._platform_directory(path)
-        metadata_result = validate_metadata(
-            yaml_result.data, display, platform_directory=platform_directory
-        )
+        metadata_result = validate_metadata(yaml_result.data, display, platform_directory=platform_directory)
         self._issues.extend(metadata_result.issues)
 
         parsed = parse_rule_document(yaml_result.data, display)
@@ -160,9 +158,7 @@ class RepositoryValidator:
             return None
         return _PLATFORM_BY_DIRECTORY.get(relative.parts[0].lower())
 
-    def _build_rule(
-        self, parsed: ParsedRule, metadata: RuleMetadata, display: str
-    ) -> DetectionRule | None:
+    def _build_rule(self, parsed: ParsedRule, metadata: RuleMetadata, display: str) -> DetectionRule | None:
         """Assemble a :class:`DetectionRule` when the rule passed every stage."""
 
         if not metadata.rule_id or not metadata.title:
@@ -216,9 +212,7 @@ class RepositoryValidator:
             raw=raw,
         )
 
-    def _check_repository_rules(
-        self, rules: list[DetectionRule], display_paths: list[str]
-    ) -> None:
+    def _check_repository_rules(self, rules: list[DetectionRule], display_paths: list[str]) -> None:
         """Cross-file checks: duplicate identifiers, titles and names."""
 
         seen_ids: dict[str, str] = {}
@@ -251,10 +245,7 @@ class RepositoryValidator:
                     Issue(
                         severity=IssueSeverity.ERROR,
                         code="repository.duplicate_title",
-                        message=(
-                            f"Title '{rule.title}' is already used by "
-                            f"'{seen_titles[title_key]}'."
-                        ),
+                        message=(f"Title '{rule.title}' is already used by " f"'{seen_titles[title_key]}'."),
                         rule_path=rule.path,
                         rule_id=identifier,
                         field="title",
